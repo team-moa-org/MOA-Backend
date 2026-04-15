@@ -21,5 +21,7 @@ enum class ErrorCode(
     // user
     USER_NOT_FOUND(404, "User not found"),
     USER_DELETED(403, "User deleted"),
+    USER_ALREADY_EXISTS(409, "User already exists"),
+    PASSWORD_MISMATCH(401, "Password mismatch"),
     ;
 }

@@ -41,6 +41,7 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/auth/login").permitAll()
+                    .requestMatchers("/auth/signup").permitAll()
                     .requestMatchers("/auth/reissue").permitAll()
                     .anyRequest().authenticated()
             }
