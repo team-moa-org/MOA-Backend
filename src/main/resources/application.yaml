@@ -1,0 +1,47 @@
+spring:
+    application:
+        name: moa
+
+    datasource:
+        url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:moa}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+        username: ${DB_USERNAME:root}
+        password: ${DB_PASSWORD:12345}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
+                format_sql: true
+        show-sql: ${JPA_SHOW_SQL:false}
+        open-in-view: false
+
+    data:
+        redis:
+            host: ${REDIS_HOST:localhost}
+            port: ${REDIS_PORT:6379}
+            lettuce:
+                pool:
+                    max-active: 10
+                    max-idle: 10
+                    min-idle: 2
+            timeout: 3000ms
+
+server:
+    port: 8080
+
+logging:
+    level:
+        root: INFO
+        org.hibernate.SQL: WARN
+        org.hibernate.type.descriptor.sql.BasicBinder: WARN
+        moa.moabackend: INFO
+
+jwt:
+    secret: ${JWT_SECRET:dGhpc0lzQVZlcnlTZWN1cmVTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25XaXRoSFM1MTJBbGdvcml0aG1JdE11c3RCZUxvbmdFbm91Z2g=}
+    access-exp: 3600
+    refresh-exp: 604800
+    header: Authorization
+    prefix: "Bearer "
