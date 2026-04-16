@@ -45,3 +45,15 @@ jwt:
     refresh-exp: 604800
     header: Authorization
     prefix: "Bearer "
+
+cloud:
+    aws:
+        credentials:
+            access-key: ${AWS_ACCESS_KEY:your-access-key}
+            secret-key: ${AWS_SECRET_KEY:your-secret-key}
+        s3:
+            bucket: ${AWS_S3_BUCKET:your-bucket-name}
+            url: ${AWS_S3_URL:https://your-bucket-name.s3.your-region.amazonaws.com}
+        regions:
+            static: ${AWS_REGION:ap-northeast-2}
+

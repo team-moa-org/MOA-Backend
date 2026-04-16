@@ -18,11 +18,10 @@ class ReissueService(
     @Transactional
     fun execute(request: ReissueRequest): TokenResponse {
         val userId = jwtTokenProvider.validateRefreshToken(request.refreshToken)
-
-        userFacade.findUserByTokenUserId(userId)
+        val user = userFacade.findUserByTokenUserId(userId)
 
         refreshTokenRepository.deleteById(request.refreshToken)
 
-        return jwtTokenProvider.generateTokens(userId)
+        return jwtTokenProvider.generateTokens(userId, user.role.name)
     }
 }

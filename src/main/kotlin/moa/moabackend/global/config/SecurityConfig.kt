@@ -40,9 +40,10 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/auth/login").permitAll()
-                    .requestMatchers("/auth/signup").permitAll()
-                    .requestMatchers("/auth/reissue").permitAll()
+                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/group-purchase/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/group-purchase").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/group-purchase/*/join").authenticated()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)

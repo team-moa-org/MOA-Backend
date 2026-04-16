@@ -26,6 +26,6 @@ class LoginService(
             throw PasswordMismatchException
         }
 
-        return jwtTokenProvider.generateTokens(user.id)
+        return jwtTokenProvider.generateTokens(user.id, user.role.name)
     }
 }

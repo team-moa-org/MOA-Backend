@@ -23,5 +23,15 @@ enum class ErrorCode(
     USER_DELETED(403, "User deleted"),
     USER_ALREADY_EXISTS(409, "User already exists"),
     PASSWORD_MISMATCH(401, "Password mismatch"),
+
+    // group purchase
+    GROUP_PURCHASE_NOT_FOUND(404, "Group purchase not found"),
+    ALREADY_JOINED(409, "Already joined this group purchase"),
+    OVER_TARGET_COUNT(400, "Already reached target count"),
+    EXPIRED_DEADLINE(400, "Deadline has passed"),
+    CANNOT_JOIN_OWN_PURCHASE(400, "Cannot join your own group purchase"),
+
+    // auth
+    INVALID_ADMIN_KEY(401, "Invalid admin key"),
     ;
 }
