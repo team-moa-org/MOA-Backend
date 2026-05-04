@@ -33,5 +33,10 @@ enum class ErrorCode(
 
     // auth
     INVALID_ADMIN_KEY(401, "Invalid admin key"),
+
+    // payment
+    PAYMENT_NOT_FOUND(404, "Payment not found"),
+    PAYMENT_VERIFICATION_FAILED(400, "Payment verification failed"),
+    PAYMENT_AMOUNT_MISMATCH(400, "Payment amount mismatch"),
     ;
 }

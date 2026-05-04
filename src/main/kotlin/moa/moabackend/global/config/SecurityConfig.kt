@@ -46,6 +46,7 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.POST, "/group-purchase").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/group-purchase/*/join").authenticated()
                     .requestMatchers("/user/admin").hasRole("ADMIN")
+                    .requestMatchers("/payment/**").authenticated()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
