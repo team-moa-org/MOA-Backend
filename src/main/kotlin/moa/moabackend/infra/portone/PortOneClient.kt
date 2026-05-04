@@ -43,4 +43,19 @@ class PortOneClient(
 
         return response?.response ?: throw RuntimeException("Failed to get PortOne payment data")
     }
+
+    fun refund(impUid: String, accessToken: String, reason: String, amount: Int? = null) {
+        val headers = HttpHeaders()
+        headers.setBearerAuth(accessToken)
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val body = mutableMapOf<String, Any>(
+            "imp_uid" to impUid,
+            "reason" to reason
+        )
+        amount?.let { body["amount"] = it }
+
+        val request = HttpEntity(body, headers)
+        restTemplate.postForObject("$baseUrl/payments/cancel", request, Map::class.java)
+    }
 }
