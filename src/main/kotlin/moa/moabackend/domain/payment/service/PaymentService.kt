@@ -5,6 +5,7 @@ import moa.moabackend.domain.grouppurchase.domain.exception.*
 import moa.moabackend.domain.grouppurchase.domain.repository.GroupPurchaseRepository
 import moa.moabackend.domain.participation.domain.PurchaseParticipant
 import moa.moabackend.domain.participation.domain.repository.PurchaseParticipantRepository
+import moa.moabackend.domain.grouppurchase.presentation.dto.response.GroupPurchaseCountUpdate
 import moa.moabackend.domain.payment.domain.Payment
 import moa.moabackend.domain.payment.domain.exception.PaymentAmountMismatchException
 import moa.moabackend.domain.payment.domain.exception.PaymentNotFoundException
@@ -15,6 +16,7 @@ import moa.moabackend.domain.payment.presentation.dto.response.PaymentReadyRespo
 import moa.moabackend.domain.user.service.facade.UserFacade
 import moa.moabackend.infra.portone.PortOneClient
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -26,7 +28,8 @@ class PaymentService(
     private val groupPurchaseRepository: GroupPurchaseRepository,
     private val purchaseParticipantRepository: PurchaseParticipantRepository,
     private val userFacade: UserFacade,
-    private val portOneClient: PortOneClient
+    private val portOneClient: PortOneClient,
+    private val messagingTemplate: SimpMessagingTemplate
 ) {
 
     @Transactional
@@ -78,6 +81,19 @@ class PaymentService(
 
         // 4. 공동구매 참여 처리 (기존 JoinGroupPurchaseService 로직 통합)
         finalizeJoin(payment)
+
+        // 5. 웹소켓 실시간 인원수 업데이트 발송
+        broadcastCountUpdate(payment.groupPurchase)
+    }
+
+    private fun broadcastCountUpdate(groupPurchase: moa.moabackend.domain.grouppurchase.domain.GroupPurchase) {
+        val update = GroupPurchaseCountUpdate(
+            groupPurchaseId = groupPurchase.id,
+            currentCount = groupPurchase.currentCount,
+            currentPrice = groupPurchase.getCurrentPrice(),
+            status = groupPurchase.status.name
+        )
+        messagingTemplate.convertAndSend("/topic/group-purchase/${groupPurchase.id}", update)
     }
 
     private fun validateJoinable(userId: Long, groupPurchase: moa.moabackend.domain.grouppurchase.domain.GroupPurchase) {
