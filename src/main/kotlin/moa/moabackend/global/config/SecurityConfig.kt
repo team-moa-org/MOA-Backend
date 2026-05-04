@@ -41,9 +41,11 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers(HttpMethod.GET, "/group-purchase/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/group-purchase").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/group-purchase/*/join").authenticated()
+                    .requestMatchers("/user/admin").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)

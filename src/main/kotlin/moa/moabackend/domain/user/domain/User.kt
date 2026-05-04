@@ -29,6 +29,15 @@ class User(
     @Column(nullable = false, length = 10)
     val role: Role,
 
+    @Column(nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column
+    var profileImageUrl: String? = null,
+
+    @Column(length = 50)
+    var farmName: String? = null,
+
     @Column
     var deletedAt: LocalDateTime? = null
 

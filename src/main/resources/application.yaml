@@ -2,6 +2,17 @@ spring:
     application:
         name: moa
 
+    cloud:
+        aws:
+            credentials:
+                access-key: ${AWS_ACCESS_KEY:your-access-key}
+                secret-key: ${AWS_SECRET_KEY:your-secret-key}
+            s3:
+                bucket: ${AWS_S3_BUCKET:your-bucket-name}
+                endpoint: ${AWS_S3_URL:https://s3.ap-northeast-2.amazonaws.com}
+            region:
+                static: ${AWS_REGION:ap-northeast-2}
+
     datasource:
         url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:moa}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
         username: ${DB_USERNAME:root}
@@ -46,14 +57,18 @@ jwt:
     header: Authorization
     prefix: "Bearer "
 
-cloud:
-    aws:
-        credentials:
-            access-key: ${AWS_ACCESS_KEY:your-access-key}
-            secret-key: ${AWS_SECRET_KEY:your-secret-key}
-        s3:
-            bucket: ${AWS_S3_BUCKET:your-bucket-name}
-            url: ${AWS_S3_URL:https://your-bucket-name.s3.your-region.amazonaws.com}
-        regions:
-            static: ${AWS_REGION:ap-northeast-2}
+springdoc:
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+    swagger-ui:
+        path: /swagger-ui.html
+        groups-order: ASC
+        operations-sorter: method
+        disable-swagger-default-url: true
+        display-request-duration: true
+    api-docs:
+        path: /v3/api-docs
+    show-actuator: true
+    override-with-generic-response: true
+
 

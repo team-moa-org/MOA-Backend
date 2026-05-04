@@ -18,5 +18,9 @@ data class AdminSignupRequest(
     val password: String,
 
     @field:NotBlank(message = "관리자 키는 필수입니다.")
-    val adminKey: String
+    val adminKey: String,
+
+    @field:NotBlank(message = "판매농장명은 필수입니다.")
+    @field:Size(min = 2, max = 20, message = "판매농장명은 2~20자 사이여야 합니다.")
+    val farmName: String
 )

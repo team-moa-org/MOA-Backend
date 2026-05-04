@@ -27,7 +27,8 @@ class AdminSignupService(
             email = request.email,
             name = request.name,
             password = passwordEncoder.encode(request.password),
-            role = Role.ADMIN
+            role = Role.ADMIN,
+            farmName = request.farmName
         )
 
         userRepository.save(user)
