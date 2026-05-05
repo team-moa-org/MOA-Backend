@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface PurchaseParticipantRepository : JpaRepository<PurchaseParticipant, Long> {
     fun existsByUserAndGroupPurchase(user: User, groupPurchase: GroupPurchase): Boolean
+    fun findAllByGroupPurchase(groupPurchase: GroupPurchase): List<PurchaseParticipant>
+    fun findByGroupPurchaseAndUser_Id(groupPurchase: GroupPurchase, userId: Long): PurchaseParticipant?
 }

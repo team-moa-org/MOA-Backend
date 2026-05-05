@@ -27,6 +27,12 @@ class PurchaseParticipant(
     val groupPurchase: GroupPurchase,
 
     @Column(nullable = false)
-    val joinedAt: LocalDateTime = LocalDateTime.now()
+    val quantity: Int,
+
+    @Column(nullable = false, length = 255)
+    val shippingAddress: String,
+
+    @Column(nullable = false)
+    val orderedAt: LocalDateTime = LocalDateTime.now()
 
 )

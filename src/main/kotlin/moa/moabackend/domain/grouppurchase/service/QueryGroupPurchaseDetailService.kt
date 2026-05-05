@@ -4,6 +4,8 @@ import moa.moabackend.domain.grouppurchase.domain.exception.GroupPurchaseNotFoun
 import moa.moabackend.domain.grouppurchase.domain.repository.GroupPurchaseRepository
 import moa.moabackend.domain.grouppurchase.presentation.dto.response.*
 import moa.moabackend.domain.participation.domain.repository.PurchaseParticipantRepository
+import moa.moabackend.domain.payment.domain.PaymentStatus
+import moa.moabackend.domain.payment.domain.repository.PaymentRepository
 import moa.moabackend.domain.user.service.facade.UserFacade
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -15,6 +17,7 @@ import java.time.LocalDateTime
 class QueryGroupPurchaseDetailService(
     private val groupPurchaseRepository: GroupPurchaseRepository,
     private val purchaseParticipantRepository: PurchaseParticipantRepository,
+    private val paymentRepository: PaymentRepository,
     private val userFacade: UserFacade
 ) {
 
@@ -26,6 +29,11 @@ class QueryGroupPurchaseDetailService(
 
         val now = LocalDateTime.now()
         val currentCount = groupPurchase.currentCount
+
+        // 매출 및 달성률 계산
+        val totalRevenue = paymentRepository.findAllByGroupPurchaseAndStatus(groupPurchase, PaymentStatus.PAID)
+            .sumOf { it.amount }
+        val achievementRate = (currentCount.toDouble() / groupPurchase.targetCount.toDouble()) * 100
 
         // 다음 할인 단계 찾기
         val nextTier = groupPurchase.discountTiers
@@ -42,6 +50,7 @@ class QueryGroupPurchaseDetailService(
         return GroupPurchaseDetailResponse(
             id = groupPurchase.id,
             title = groupPurchase.title,
+            category = groupPurchase.category,
             thumbnailUrl = groupPurchase.thumbnailUrl,
             content = groupPurchase.content,
             basePrice = groupPurchase.basePrice,
@@ -53,6 +62,8 @@ class QueryGroupPurchaseDetailService(
                 Duration.between(now, groupPurchase.deadline).seconds
             } else 0L,
             status = groupPurchase.status,
+            totalRevenue = totalRevenue,
+            achievementRate = achievementRate,
             ownerName = groupPurchase.user.name,
             isOwner = user?.let { it.id == groupPurchase.user.id } ?: false,
             isJoined = user?.let { purchaseParticipantRepository.existsByUserAndGroupPurchase(it, groupPurchase) } ?: false,

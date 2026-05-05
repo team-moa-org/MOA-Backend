@@ -22,6 +22,12 @@ class Payment(
     @Column(nullable = false)
     val amount: Int,
 
+    @Column(nullable = false)
+    val quantity: Int,
+
+    @Column(nullable = false, length = 255)
+    val shippingAddress: String,
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     var status: PaymentStatus = PaymentStatus.READY,

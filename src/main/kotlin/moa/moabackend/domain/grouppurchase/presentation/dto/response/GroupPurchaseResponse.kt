@@ -1,5 +1,6 @@
 package moa.moabackend.domain.grouppurchase.presentation.dto.response
 
+import moa.moabackend.domain.grouppurchase.domain.Category
 import moa.moabackend.domain.grouppurchase.domain.GroupPurchaseStatus
 import java.time.LocalDateTime
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime
 data class GroupPurchaseListResponse(
     val id: Long,
     val title: String,
+    val category: Category,
     val thumbnailUrl: String,
     val basePrice: Int,
     val currentPrice: Int,
@@ -23,6 +25,7 @@ data class GroupPurchaseListResponse(
 data class GroupPurchaseDetailResponse(
     val id: Long,
     val title: String,
+    val category: Category,
     val thumbnailUrl: String,
     val content: String,
     val basePrice: Int,
@@ -32,6 +35,8 @@ data class GroupPurchaseDetailResponse(
     val deadline: LocalDateTime,
     val remainingSeconds: Long,
     val status: GroupPurchaseStatus,
+    val totalRevenue: Int,       // 총 매출 (판매자용)
+    val achievementRate: Double, // 달성률 (판매자용)
     val ownerName: String,
     val isOwner: Boolean,       // 현재 사용자가 주인인지
     val isJoined: Boolean,      // 현재 사용자가 이미 참여했는지

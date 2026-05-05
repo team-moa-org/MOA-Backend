@@ -22,6 +22,7 @@ class QueryGroupPurchaseListService(
                 GroupPurchaseListResponse(
                     id = it.id,
                     title = it.title,
+                    category = it.category,
                     thumbnailUrl = it.thumbnailUrl,
                     basePrice = it.basePrice,
                     currentPrice = it.getCurrentPrice(),

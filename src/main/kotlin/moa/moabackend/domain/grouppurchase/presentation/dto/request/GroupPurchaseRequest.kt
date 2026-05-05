@@ -1,11 +1,15 @@
 package moa.moabackend.domain.grouppurchase.presentation.dto.request
 
 import jakarta.validation.constraints.*
+import moa.moabackend.domain.grouppurchase.domain.Category
 import java.time.LocalDateTime
 
 data class CreateGroupPurchaseRequest(
     @field:NotBlank(message = "제목은 필수입니다.")
     val title: String,
+
+    @field:NotNull(message = "카테고리는 필수입니다.")
+    val category: Category,
 
     @field:NotBlank(message = "내용은 필수입니다.")
     val content: String,

@@ -7,7 +7,6 @@ import moa.moabackend.domain.grouppurchase.presentation.dto.request.CreateGroupP
 import moa.moabackend.domain.grouppurchase.presentation.dto.response.GroupPurchaseDetailResponse
 import moa.moabackend.domain.grouppurchase.presentation.dto.response.GroupPurchaseListResponse
 import moa.moabackend.domain.grouppurchase.service.CreateGroupPurchaseService
-import moa.moabackend.domain.grouppurchase.service.JoinGroupPurchaseService
 import moa.moabackend.domain.grouppurchase.service.QueryGroupPurchaseDetailService
 import moa.moabackend.domain.grouppurchase.service.QueryGroupPurchaseListService
 import org.springframework.http.HttpStatus
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile
 @Tag(name = "공동구매 API", description = "공동구매 게시글 생성, 조회, 참여를 담당합니다.")
 class GroupPurchaseController(
     private val createGroupPurchaseService: CreateGroupPurchaseService,
-    private val joinGroupPurchaseService: JoinGroupPurchaseService,
     private val queryGroupPurchaseListService: QueryGroupPurchaseListService,
     private val queryGroupPurchaseDetailService: QueryGroupPurchaseDetailService
 ) {
@@ -33,12 +31,6 @@ class GroupPurchaseController(
         @RequestPart("image") image: MultipartFile
     ) {
         createGroupPurchaseService.execute(request, image)
-    }
-
-    @Operation(summary = "공동구매 참여 (USER 전용)")
-    @PostMapping("/{id}/join")
-    fun join(@PathVariable id: Long) {
-        joinGroupPurchaseService.execute(id)
     }
 
     @Operation(summary = "공동구매 목록 조회 (비로그인 가능)")

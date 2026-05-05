@@ -2,6 +2,7 @@ package moa.moabackend.domain.payment.presentation
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import moa.moabackend.domain.payment.presentation.dto.request.PaymentReadyRequest
 import moa.moabackend.domain.payment.presentation.dto.request.PaymentVerifyRequest
 import moa.moabackend.domain.payment.presentation.dto.response.PaymentReadyResponse
 import moa.moabackend.domain.payment.service.PaymentService
@@ -16,8 +17,11 @@ class PaymentController(
 
     @Operation(summary = "결제 준비 (merchant_uid 생성)")
     @PostMapping("/ready/{groupPurchaseId}")
-    fun ready(@PathVariable groupPurchaseId: Long): PaymentReadyResponse {
-        return paymentService.ready(groupPurchaseId)
+    fun ready(
+        @PathVariable groupPurchaseId: Long,
+        @RequestBody request: PaymentReadyRequest
+    ): PaymentReadyResponse {
+        return paymentService.ready(groupPurchaseId, request)
     }
 
     @Operation(summary = "결제 검증 및 완료")

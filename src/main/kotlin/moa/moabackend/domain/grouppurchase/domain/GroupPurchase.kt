@@ -16,6 +16,10 @@ class GroupPurchase(
     @Column(nullable = false, length = 100)
     val title: String,
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    val category: Category,
+
     @Column(nullable = false, length = 255)
     val thumbnailUrl: String,
 

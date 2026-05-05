@@ -11,6 +11,7 @@ import moa.moabackend.domain.payment.domain.exception.PaymentAmountMismatchExcep
 import moa.moabackend.domain.payment.domain.exception.PaymentNotFoundException
 import moa.moabackend.domain.payment.domain.exception.PaymentVerificationFailedException
 import moa.moabackend.domain.payment.domain.repository.PaymentRepository
+import moa.moabackend.domain.payment.presentation.dto.request.PaymentReadyRequest
 import moa.moabackend.domain.payment.presentation.dto.request.PaymentVerifyRequest
 import moa.moabackend.domain.payment.presentation.dto.response.PaymentReadyResponse
 import moa.moabackend.domain.user.service.facade.UserFacade
@@ -33,7 +34,7 @@ class PaymentService(
 ) {
 
     @Transactional
-    fun ready(groupPurchaseId: Long): PaymentReadyResponse {
+    fun ready(groupPurchaseId: Long, request: PaymentReadyRequest): PaymentReadyResponse {
         val user = userFacade.getCurrentUser()
         val groupPurchase = groupPurchaseRepository.findByIdOrNull(groupPurchaseId)
             ?: throw GroupPurchaseNotFoundException
@@ -42,12 +43,14 @@ class PaymentService(
         validateJoinable(user.id, groupPurchase)
 
         val merchantUid = "order_${UUID.randomUUID()}"
-        val amount = groupPurchase.getCurrentPrice()
+        val amount = groupPurchase.getCurrentPrice() * request.quantity
 
         paymentRepository.save(
             Payment(
                 merchantUid = merchantUid,
                 amount = amount,
+                quantity = request.quantity,
+                shippingAddress = request.shippingAddress,
                 user = user,
                 groupPurchase = groupPurchase
             )
@@ -116,9 +119,14 @@ class PaymentService(
         purchaseParticipantRepository.save(
             PurchaseParticipant(
                 user = payment.user,
-                groupPurchase = payment.groupPurchase
+                groupPurchase = payment.groupPurchase,
+                quantity = payment.quantity,
+                shippingAddress = payment.shippingAddress
             )
         )
-        payment.groupPurchase.join()
+        // 수량만큼 인원수 증가
+        repeat(payment.quantity) {
+            payment.groupPurchase.join()
+        }
     }
 }

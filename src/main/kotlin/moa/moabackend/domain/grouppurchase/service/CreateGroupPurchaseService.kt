@@ -24,6 +24,7 @@ class CreateGroupPurchaseService(
 
         val groupPurchase = GroupPurchase(
             title = request.title,
+            category = request.category,
             thumbnailUrl = thumbnailUrl,
             content = request.content,
             basePrice = request.basePrice,

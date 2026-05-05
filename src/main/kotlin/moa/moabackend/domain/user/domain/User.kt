@@ -38,6 +38,9 @@ class User(
     @Column(length = 50)
     var farmName: String? = null,
 
+    @Column(length = 20)
+    var phoneNumber: String? = null,
+
     @Column
     var deletedAt: LocalDateTime? = null
 
