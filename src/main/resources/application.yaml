@@ -5,18 +5,18 @@ spring:
     cloud:
         aws:
             credentials:
-                access-key: ${AWS_ACCESS_KEY:your-access-key}
-                secret-key: ${AWS_SECRET_KEY:your-secret-key}
+                access-key: ${AWS_ACCESS_KEY}
+                secret-key: ${AWS_SECRET_KEY}
             s3:
-                bucket: ${AWS_S3_BUCKET:your-bucket-name}
-                endpoint: ${AWS_S3_URL:https://s3.ap-northeast-2.amazonaws.com}
+                bucket: ${AWS_S3_BUCKET}
+                endpoint: https://s3.ap-northeast-3.amazonaws.com
             region:
-                static: ${AWS_REGION:ap-northeast-2}
+                static: ap-northeast-3
 
     datasource:
-        url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:moa}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-        username: ${DB_USERNAME:root}
-        password: ${DB_PASSWORD:12345}
+        url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
         driver-class-name: com.mysql.cj.jdbc.Driver
 
     jpa:
@@ -51,7 +51,7 @@ logging:
         moa.moabackend: INFO
 
 jwt:
-    secret: ${JWT_SECRET:dGhpc0lzQVZlcnlTZWN1cmVTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25XaXRoSFM1MTJBbGdvcml0aG1JdE11c3RCZUxvbmdFbm91Z2g=}
+    secret: ${JWT_SECRET}
     access-exp: 3600
     refresh-exp: 604800
     header: Authorization
@@ -72,7 +72,8 @@ springdoc:
     override-with-generic-response: true
 
 portone:
-    api-key: ${PORTONE_API_KEY:your-api-key}
-    api-secret: ${PORTONE_API_SECRET:your-api-secret}
+    api-key: ${PORTONE_API_KEY}
+    api-secret: ${PORTONE_API_SECRET}
 
-
+admin:
+    key: ${ADMIN_KEY}
