@@ -28,15 +28,15 @@ class AuthController(
     @Operation(summary = "일반 회원가입")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    fun signup(@RequestBody @Valid request: SignupRequest) {
-        signupService.execute(request)
+    fun signup(@RequestBody @Valid request: SignupRequest): TokenResponse {
+        return signupService.execute(request)
     }
 
     @Operation(summary = "관리자(판매자) 회원가입")
     @PostMapping("/signup/admin")
     @ResponseStatus(HttpStatus.CREATED)
-    fun adminSignup(@RequestBody @Valid request: AdminSignupRequest) {
-        adminSignupService.execute(request)
+    fun adminSignup(@RequestBody @Valid request: AdminSignupRequest): TokenResponse {
+        return adminSignupService.execute(request)
     }
 
     @Operation(summary = "로그인")
