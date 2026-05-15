@@ -35,6 +35,5 @@ class SwaggerConfig {
 
         return OpenAPI()
             .components(components)
-            .addSecurityItem(securityRequirement)
     }
 }
