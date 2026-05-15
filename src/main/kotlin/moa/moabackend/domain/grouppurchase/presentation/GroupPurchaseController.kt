@@ -1,6 +1,7 @@
 package moa.moabackend.domain.grouppurchase.presentation
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import moa.moabackend.domain.grouppurchase.presentation.dto.request.CreateGroupPurchaseRequest
@@ -23,7 +24,7 @@ class GroupPurchaseController(
     private val queryGroupPurchaseDetailService: QueryGroupPurchaseDetailService
 ) {
 
-    @Operation(summary = "공동구매 게시글 생성 (ADMIN 전용)")
+    @Operation(summary = "공동구매 게시글 생성 (ADMIN 전용)", security = [SecurityRequirement(name = "access-token")])
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun create(

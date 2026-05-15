@@ -2,6 +2,7 @@ package moa.moabackend.global.error
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -23,6 +24,13 @@ class GlobalExceptionHandler {
         val errorCode = ErrorCode.BAD_REQUEST
         val message = e.bindingResult.fieldError?.defaultMessage ?: errorCode.message
         val response = ErrorResponse.of(errorCode, message)
+        return ResponseEntity(response, HttpStatus.valueOf(errorCode.status))
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class) // JSON 파싱 에러 등
+    fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> {
+        val errorCode = ErrorCode.BAD_REQUEST
+        val response = ErrorResponse.of(errorCode, "잘못된 JSON 요청입니다.")
         return ResponseEntity(response, HttpStatus.valueOf(errorCode.status))
     }
 

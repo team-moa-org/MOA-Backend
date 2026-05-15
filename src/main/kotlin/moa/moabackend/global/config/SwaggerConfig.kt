@@ -21,7 +21,7 @@ class SwaggerConfig {
 
     @Bean
     fun openAPI(): OpenAPI {
-        val securitySchemeName = "BearerAuth"
+        val securitySchemeName = "access-token"
         val securityRequirement = SecurityRequirement().addList(securitySchemeName)
         val components = Components().addSecuritySchemes(
             securitySchemeName,
@@ -30,10 +30,11 @@ class SwaggerConfig {
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
                 .bearerFormat("JWT")
+                .`in`(SecurityScheme.In.HEADER)
         )
 
         return OpenAPI()
-            .addSecurityItem(securityRequirement)
             .components(components)
+            .addSecurityItem(securityRequirement)
     }
 }
