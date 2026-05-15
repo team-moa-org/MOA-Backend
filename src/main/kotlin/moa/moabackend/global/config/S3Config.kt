@@ -1,6 +1,5 @@
 package moa.moabackend.global.config
 
-/*
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,11 +10,11 @@ import software.amazon.awssdk.services.s3.S3Client
 
 @Configuration
 class S3Config(
-    @Value("${spring.cloud.aws.credentials.access-key}")
+    @Value("\${spring.cloud.aws.credentials.access-key}")
     private val accessKey: String,
-    @Value("${spring.cloud.aws.credentials.secret-key}")
+    @Value("\${spring.cloud.aws.credentials.secret-key}")
     private val secretKey: String,
-    @Value("${spring.cloud.aws.region.static}")
+    @Value("\${spring.cloud.aws.region.static}")
     private val region: String
 ) {
 
@@ -27,4 +26,3 @@ class S3Config(
             .build()
     }
 }
-*/
