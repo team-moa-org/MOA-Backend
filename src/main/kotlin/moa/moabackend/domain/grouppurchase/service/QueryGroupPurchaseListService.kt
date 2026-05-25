@@ -1,8 +1,9 @@
 package moa.moabackend.domain.grouppurchase.service
 
+import moa.moabackend.domain.grouppurchase.domain.Category
 import moa.moabackend.domain.grouppurchase.domain.repository.GroupPurchaseRepository
 import moa.moabackend.domain.grouppurchase.presentation.dto.response.GroupPurchaseListResponse
-import org.springframework.data.domain.Sort
+import moa.moabackend.domain.grouppurchase.presentation.dto.response.SortType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
@@ -14,24 +15,39 @@ class QueryGroupPurchaseListService(
 ) {
 
     @Transactional(readOnly = true)
-    fun execute(): List<GroupPurchaseListResponse> {
+    fun execute(category: Category?, sort: SortType?): List<GroupPurchaseListResponse> {
         val now = LocalDateTime.now()
 
-        return groupPurchaseRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
-            .map {
-                GroupPurchaseListResponse(
-                    id = it.id,
-                    title = it.title,
-                    category = it.category,
-                    thumbnailUrl = it.thumbnailUrl,
-                    basePrice = it.basePrice,
-                    currentPrice = it.getCurrentPrice(),
-                    currentCount = it.currentCount,
-                    remainingSeconds = if (it.deadline.isAfter(now)) {
-                        Duration.between(now, it.deadline).seconds
-                    } else 0L,
-                    status = it.status
-                )
-            }
+        val entities = if (category != null) {
+            groupPurchaseRepository.findAllByCategoryOrderByIdDesc(category)
+        } else {
+            groupPurchaseRepository.findAll()
+        }
+
+        val responseList = entities.map {
+            val currentPrice = it.getCurrentPrice()
+            val discountRate = ((it.basePrice - currentPrice).toDouble() / it.basePrice * 100).toInt()
+
+            GroupPurchaseListResponse(
+                id = it.id,
+                title = it.title,
+                category = it.category,
+                thumbnailUrl = it.thumbnailUrl,
+                basePrice = it.basePrice,
+                currentPrice = currentPrice,
+                discountRate = discountRate,
+                currentCount = it.currentCount,
+                remainingSeconds = if (it.deadline.isAfter(now)) {
+                    Duration.between(now, it.deadline).seconds
+                } else 0L,
+                status = it.status
+            )
+        }
+
+        return when (sort ?: SortType.LATEST) {
+            SortType.LATEST -> responseList.sortedByDescending { it.id }
+            SortType.DISCOUNT_RATE -> responseList.sortedByDescending { it.discountRate }
+            SortType.POPULARITY -> responseList.sortedByDescending { it.currentCount }
+        }
     }
 }

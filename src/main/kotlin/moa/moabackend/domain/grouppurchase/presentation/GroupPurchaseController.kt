@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import moa.moabackend.domain.grouppurchase.domain.Category
 
+import moa.moabackend.domain.grouppurchase.presentation.dto.response.SortType
+
 @RestController
 @RequestMapping("/group-purchase")
 @Tag(name = "공동구매 API", description = "공동구매 게시글 생성, 조회, 참여를 담당합니다.")
@@ -43,8 +45,11 @@ class GroupPurchaseController(
 
     @Operation(summary = "공동구매 목록 조회 (비로그인 가능)")
     @GetMapping
-    fun getList(@RequestParam(required = false) category: Category?): List<GroupPurchaseListResponse> {
-        return queryGroupPurchaseListService.execute(category)
+    fun getList(
+        @RequestParam(required = false) category: Category?,
+        @RequestParam(required = false) sort: SortType?
+    ): List<GroupPurchaseListResponse> {
+        return queryGroupPurchaseListService.execute(category, sort)
     }
 
     @Operation(summary = "카테고리 목록 조회 (비로그인 가능)")

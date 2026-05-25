@@ -46,6 +46,9 @@ class GroupPurchase(
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
+    @Column(nullable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
     @OneToMany(mappedBy = "groupPurchase", cascade = [CascadeType.ALL], orphanRemoval = true)
     val discountTiers: MutableList<DiscountTier> = mutableListOf()
 

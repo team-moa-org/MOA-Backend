@@ -14,10 +14,17 @@ data class GroupPurchaseListResponse(
     val thumbnailUrl: String,
     val basePrice: Int,
     val currentPrice: Int,
+    val discountRate: Int, // 현재 할인율 (%)
     val currentCount: Int,
     val remainingSeconds: Long, // 프론트 카운트다운용
     val status: GroupPurchaseStatus
 )
+
+enum class SortType {
+    LATEST,        // 최신순
+    DISCOUNT_RATE, // 할인율순
+    POPULARITY     // 인기순 (참여인원순)
+}
 
 /**
  * 상세 조회용 (모든 정보)
@@ -52,4 +59,10 @@ data class DiscountTierResponse(
 data class NextDiscountResponse(
     val remainingCount: Int,
     val nextPrice: Int
+)
+
+data class CategoryResponse(
+    val category: Category,
+    val displayName: String,
+    val count: Long
 )
