@@ -5,9 +5,7 @@ import moa.moabackend.infra.portone.dto.response.PaymentData
 import moa.moabackend.infra.portone.dto.response.PortOnePaymentResponse
 import moa.moabackend.infra.portone.dto.response.PortOneTokenResponse
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.*
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
@@ -39,9 +37,14 @@ class PortOneClient(
         headers.setBearerAuth(accessToken)
 
         val request = HttpEntity<Unit>(headers)
-        val response = restTemplate.postForObject("$baseUrl/payments/$impUid", request, PortOnePaymentResponse::class.java)
+        val response = restTemplate.exchange(
+            "$baseUrl/payments/$impUid",
+            HttpMethod.GET,
+            request,
+            PortOnePaymentResponse::class.java
+        )
 
-        return response?.response ?: throw RuntimeException("Failed to get PortOne payment data")
+        return response.body?.response ?: throw RuntimeException("Failed to get PortOne payment data")
     }
 
     fun refund(impUid: String, accessToken: String, reason: String, amount: Int? = null) {
