@@ -29,6 +29,7 @@ class GroupPurchaseController(
     private val queryGroupPurchaseListService: QueryGroupPurchaseListService,
     private val queryGroupPurchaseDetailService: QueryGroupPurchaseDetailService,
     private val queryCategoryListService: QueryCategoryListService,
+    private val cancelGroupPurchaseByAdminService: CancelGroupPurchaseByAdminService,
     private val objectMapper: ObjectMapper
 ) {
 
@@ -41,6 +42,13 @@ class GroupPurchaseController(
     ) {
         val request = objectMapper.readValue(data, CreateGroupPurchaseRequest::class.java)
         createGroupPurchaseService.execute(request, image)
+    }
+
+    @Operation(summary = "공동구매 게시글 취소 (판매자 전용, 전원 환불 및 패널티)", security = [SecurityRequirement(name = "access-token")])
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun cancelGroupByAdmin(@PathVariable id: Long) {
+        cancelGroupPurchaseByAdminService.execute(id)
     }
 
     @Operation(summary = "공동구매 목록 조회 (비로그인 가능)")

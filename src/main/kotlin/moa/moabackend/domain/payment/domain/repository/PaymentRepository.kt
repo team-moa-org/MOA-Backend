@@ -6,7 +6,10 @@ import moa.moabackend.domain.payment.domain.PaymentStatus
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 
+import moa.moabackend.domain.user.domain.User
+
 interface PaymentRepository : CrudRepository<Payment, Long> {
     fun findByMerchantUid(merchantUid: String): Payment?
     fun findAllByGroupPurchaseAndStatus(groupPurchase: GroupPurchase, status: PaymentStatus): List<Payment>
+    fun findByUserAndGroupPurchaseAndStatus(user: User, groupPurchase: GroupPurchase, status: PaymentStatus): Payment?
 }

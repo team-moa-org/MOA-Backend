@@ -36,6 +36,14 @@ class PaymentService(
     @Transactional
     fun ready(groupPurchaseId: Long, request: PaymentReadyRequest): PaymentReadyResponse {
         val user = userFacade.getCurrentUser()
+        
+        // 정지 여부 확인 (3회 이상 패널티 시 모든 기능 제한)
+        user.suspendedUntil?.let {
+            if (user.penaltyCount >= 3 && it.isAfter(LocalDateTime.now())) {
+                throw RuntimeException("정지된 계정입니다. 결제 및 참여가 불가능합니다. (해제 일시: $it)")
+            }
+        }
+
         val groupPurchase = groupPurchaseRepository.findByIdOrNull(groupPurchaseId)
             ?: throw GroupPurchaseNotFoundException
 

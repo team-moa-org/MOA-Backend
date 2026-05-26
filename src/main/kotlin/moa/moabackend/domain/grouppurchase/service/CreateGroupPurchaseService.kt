@@ -20,6 +20,14 @@ class CreateGroupPurchaseService(
     @Transactional
     fun execute(request: CreateGroupPurchaseRequest, image: MultipartFile) {
         val user = userFacade.getCurrentUser()
+        
+        // 정지 여부 확인
+        user.suspendedUntil?.let {
+            if (it.isAfter(LocalDateTime.now())) {
+                throw RuntimeException("정지된 계정입니다. 정지 해제 일시: $it")
+            }
+        }
+
         val thumbnailUrl = s3UploadService.upload(image)
 
         val groupPurchase = GroupPurchase(

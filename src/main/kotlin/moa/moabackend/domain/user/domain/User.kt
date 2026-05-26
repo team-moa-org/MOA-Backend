@@ -32,6 +32,12 @@ class User(
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
+    @Column(nullable = false)
+    var penaltyCount: Int = 0,
+
+    @Column
+    var suspendedUntil: LocalDateTime? = null,
+
     @Column
     var profileImageUrl: String? = null,
 
