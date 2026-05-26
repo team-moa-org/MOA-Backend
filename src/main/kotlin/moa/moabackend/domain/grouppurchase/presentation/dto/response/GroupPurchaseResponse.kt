@@ -4,9 +4,7 @@ import moa.moabackend.domain.grouppurchase.domain.Category
 import moa.moabackend.domain.grouppurchase.domain.GroupPurchaseStatus
 import java.time.LocalDateTime
 
-/**
- * 목록 조회용 (간결한 정보)
- */
+
 data class GroupPurchaseListResponse(
     val id: Long,
     val title: String,
@@ -14,21 +12,19 @@ data class GroupPurchaseListResponse(
     val thumbnailUrl: String,
     val basePrice: Int,
     val currentPrice: Int,
-    val discountRate: Int, // 현재 할인율 (%)
+    val discountRate: Int, 
     val currentCount: Int,
-    val remainingSeconds: Long, // 프론트 카운트다운용
+    val remainingSeconds: Long, 
     val status: GroupPurchaseStatus
 )
 
 enum class SortType {
-    LATEST,        // 최신순
-    DISCOUNT_RATE, // 할인율순
-    POPULARITY     // 인기순 (참여인원순)
+    LATEST,        
+    DISCOUNT_RATE, 
+    POPULARITY     
 }
 
-/**
- * 상세 조회용 (모든 정보)
- */
+
 data class GroupPurchaseDetailResponse(
     val id: Long,
     val title: String,
@@ -42,11 +38,11 @@ data class GroupPurchaseDetailResponse(
     val deadline: LocalDateTime,
     val remainingSeconds: Long,
     val status: GroupPurchaseStatus,
-    val totalRevenue: Int,       // 총 매출 (판매자용)
-    val achievementRate: Double, // 달성률 (판매자용)
+    val totalRevenue: Int,       
+    val achievementRate: Double, 
     val ownerName: String,
-    val isOwner: Boolean,       // 현재 사용자가 주인인지
-    val isJoined: Boolean,      // 현재 사용자가 이미 참여했는지
+    val isOwner: Boolean,       
+    val isJoined: Boolean,      
     val discountTiers: List<DiscountTierResponse>,
     val nextDiscount: NextDiscountResponse?
 )

@@ -17,7 +17,7 @@ class GroupPurchaseScheduler(
     private val portOneClient: PortOneClient
 ) {
 
-    @Scheduled(cron = "0 * * * * *") // 매 분 0초에 실행
+    @Scheduled(cron = "0 * * * * *") 
     @Transactional
     fun checkGroupPurchaseDeadline() {
         val now = LocalDateTime.now()
@@ -27,11 +27,11 @@ class GroupPurchaseScheduler(
 
         expiredPurchases.forEach { purchase ->
             if (purchase.currentCount < purchase.targetCount) {
-                // 1. 최소 인원 미달 시 취소 및 전체 환불
+                
                 purchase.status = GroupPurchaseStatus.CANCELLED
                 refundAllParticipants(purchase)
             } else {
-                // 2. 최소 인원 달성 시 완료 처리 및 차액 부분 환불
+                
                 purchase.status = GroupPurchaseStatus.COMPLETED
                 refundDifferenceToParticipants(purchase)
             }
@@ -70,7 +70,7 @@ class GroupPurchaseScheduler(
                             reason = "공동구매 최종 할인 차액 환불",
                             amount = refundAmount
                         )
-                        // 참고: 부분 환불 후에도 상태는 PAID로 유지 (필요 시 부분 환불 완료 필드 추가 가능)
+                        
                     }
                 } catch (e: Exception) {
                     println("Partial refund failed for payment ${payment.merchantUid}: ${e.message}")

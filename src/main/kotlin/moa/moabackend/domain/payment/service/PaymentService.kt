@@ -37,7 +37,7 @@ class PaymentService(
     fun ready(groupPurchaseId: Long, request: PaymentReadyRequest): PaymentReadyResponse {
         val user = userFacade.getCurrentUser()
         
-        // 정지 여부 확인 (3회 이상 패널티 시 모든 기능 제한)
+        
         user.suspendedUntil?.let {
             if (user.penaltyCount >= 3 && it.isAfter(LocalDateTime.now())) {
                 throw RuntimeException("정지된 계정입니다. 결제 및 참여가 불가능합니다. (해제 일시: $it)")
@@ -47,7 +47,7 @@ class PaymentService(
         val groupPurchase = groupPurchaseRepository.findByIdOrNull(groupPurchaseId)
             ?: throw GroupPurchaseNotFoundException
 
-        // 참여 가능 여부 사전 체크
+        
         validateJoinable(user.id, groupPurchase)
 
         val merchantUid = "order_${UUID.randomUUID()}"
@@ -75,25 +75,25 @@ class PaymentService(
         val accessToken = portOneClient.getAccessToken()
         val portOnePayment = portOneClient.getPaymentData(request.impUid, accessToken)
 
-        // 1. 금액 검증
+        
         if (payment.amount != portOnePayment.amount) {
             payment.fail()
             throw PaymentAmountMismatchException
         }
 
-        // 2. 상태 확인
+        
         if (portOnePayment.status != "paid") {
             payment.fail()
             throw PaymentVerificationFailedException
         }
 
-        // 3. 결제 완료 처리
+        
         payment.complete(request.impUid)
 
-        // 4. 공동구매 참여 처리 (기존 JoinGroupPurchaseService 로직 통합)
+        
         finalizeJoin(payment)
 
-        // 5. 웹소켓 실시간 인원수 업데이트 발송
+        
         broadcastCountUpdate(payment.groupPurchase)
     }
 
@@ -132,7 +132,7 @@ class PaymentService(
                 shippingAddress = payment.shippingAddress
             )
         )
-        // 수량만큼 인원수 증가
+        
         repeat(payment.quantity) {
             payment.groupPurchase.join()
         }

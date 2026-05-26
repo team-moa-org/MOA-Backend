@@ -30,12 +30,12 @@ class QueryGroupPurchaseDetailService(
         val now = LocalDateTime.now()
         val currentCount = groupPurchase.currentCount
 
-        // 매출 및 달성률 계산
+        
         val totalRevenue = paymentRepository.findAllByGroupPurchaseAndStatus(groupPurchase, PaymentStatus.PAID)
             .sumOf { it.amount }
         val achievementRate = (currentCount.toDouble() / groupPurchase.targetCount.toDouble()) * 100
 
-        // 다음 할인 단계 찾기
+        
         val nextTier = groupPurchase.discountTiers
             .filter { it.requiredCount > currentCount }
             .minByOrNull { it.requiredCount }

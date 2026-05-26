@@ -75,9 +75,9 @@ class GroupPurchase(
         }
     }
 
-    // 현재 인원에 따른 실시간 가격 계산
+    
     fun getCurrentPrice(): Int {
-        // 인원수 조건에 맞는 티어 중 가장 큰 requiredCount를 가진 티어의 가격 선택
+        
         return discountTiers
             .filter { currentCount >= it.requiredCount }
             .maxByOrNull { it.requiredCount }

@@ -28,16 +28,16 @@ class CancelPaymentService(
         val groupPurchase = groupPurchaseRepository.findByIdOrNull(groupPurchaseId)
             ?: throw GroupPurchaseNotFoundException
 
-        // 1. 모집 중일 때만 취소 가능
+        
         if (groupPurchase.status != GroupPurchaseStatus.RECRUITING) {
             throw RuntimeException("모집 중인 공동구매만 취소가 가능합니다.")
         }
 
-        // 2. 결제 내역 찾기
+        
         val payment = paymentRepository.findByUserAndGroupPurchaseAndStatus(user, groupPurchase, PaymentStatus.PAID)
             ?: throw PaymentNotFoundException
 
-        // 3. 포트원 환불 호출
+        
         val accessToken = portOneClient.getAccessToken()
         portOneClient.refund(
             impUid = payment.impUid!!,
@@ -46,12 +46,12 @@ class CancelPaymentService(
             amount = payment.amount
         )
 
-        // 4. 상태 변경 및 참여자 삭제
+        
         payment.cancel()
         val participant = purchaseParticipantRepository.findByGroupPurchaseAndUser_Id(groupPurchase, user.id)
         participant?.let { purchaseParticipantRepository.delete(it) }
 
-        // 5. 인원수 감소
+        
         groupPurchase.leave(payment.quantity)
     }
 }
