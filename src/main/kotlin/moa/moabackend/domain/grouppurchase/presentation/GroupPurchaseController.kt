@@ -13,6 +13,7 @@ import moa.moabackend.domain.grouppurchase.service.CreateGroupPurchaseService
 import moa.moabackend.domain.grouppurchase.service.QueryCategoryListService
 import moa.moabackend.domain.grouppurchase.service.QueryGroupPurchaseDetailService
 import moa.moabackend.domain.grouppurchase.service.QueryGroupPurchaseListService
+import moa.moabackend.domain.grouppurchase.service.CancelGroupPurchaseByAdminService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
