@@ -1,16 +1,9 @@
-FROM gradle:8-jdk17 AS build
-WORKDIR /home/gradle/project
+FROM eclipse-temurin:17-jre
 
-COPY --chown=gradle:gradle . .
-RUN gradle build --no-daemon -x test
-
-FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
-
-ENV SPRING_PROFILES_ACTIVE=prod
+COPY MOA-Backend-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "-Duser.timezone=Asia/Seoul", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
