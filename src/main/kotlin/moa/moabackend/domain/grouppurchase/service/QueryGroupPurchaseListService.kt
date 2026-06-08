@@ -11,7 +11,8 @@ import java.time.LocalDateTime
 
 @Service
 class QueryGroupPurchaseListService(
-    private val groupPurchaseRepository: GroupPurchaseRepository
+    private val groupPurchaseRepository: GroupPurchaseRepository,
+    private val s3UploadService: moa.moabackend.global.config.S3UploadService
 ) {
 
     @Transactional(readOnly = true)
@@ -32,7 +33,7 @@ class QueryGroupPurchaseListService(
                 id = it.id,
                 title = it.title,
                 category = it.category,
-                thumbnailUrl = it.thumbnailUrl,
+                thumbnailUrl = s3UploadService.generatePresignedUrl(it.thumbnailUrl) ?: "",
                 basePrice = it.basePrice,
                 currentPrice = currentPrice,
                 discountRate = discountRate,

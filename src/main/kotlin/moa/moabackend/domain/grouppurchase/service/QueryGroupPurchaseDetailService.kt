@@ -18,7 +18,8 @@ class QueryGroupPurchaseDetailService(
     private val groupPurchaseRepository: GroupPurchaseRepository,
     private val purchaseParticipantRepository: PurchaseParticipantRepository,
     private val paymentRepository: PaymentRepository,
-    private val userFacade: UserFacade
+    private val userFacade: UserFacade,
+    private val s3UploadService: moa.moabackend.global.config.S3UploadService
 ) {
 
     @Transactional(readOnly = true)
@@ -30,12 +31,10 @@ class QueryGroupPurchaseDetailService(
         val now = LocalDateTime.now()
         val currentCount = groupPurchase.currentCount
 
-        
         val totalRevenue = paymentRepository.findAllByGroupPurchaseAndStatus(groupPurchase, PaymentStatus.PAID)
             .sumOf { it.amount }
         val achievementRate = (currentCount.toDouble() / groupPurchase.targetCount.toDouble()) * 100
 
-        
         val nextTier = groupPurchase.discountTiers
             .filter { it.requiredCount > currentCount }
             .minByOrNull { it.requiredCount }
@@ -51,7 +50,7 @@ class QueryGroupPurchaseDetailService(
             id = groupPurchase.id,
             title = groupPurchase.title,
             category = groupPurchase.category,
-            thumbnailUrl = groupPurchase.thumbnailUrl,
+            thumbnailUrl = s3UploadService.generatePresignedUrl(groupPurchase.thumbnailUrl) ?: "",
             content = groupPurchase.content,
             basePrice = groupPurchase.basePrice,
             currentPrice = groupPurchase.getCurrentPrice(),

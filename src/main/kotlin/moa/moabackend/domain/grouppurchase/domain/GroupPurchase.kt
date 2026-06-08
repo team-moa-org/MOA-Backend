@@ -20,7 +20,7 @@ class GroupPurchase(
     @Column(nullable = false, length = 20)
     val category: Category,
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, columnDefinition = "VARCHAR(500)")
     val thumbnailUrl: String,
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -75,9 +75,7 @@ class GroupPurchase(
         }
     }
 
-    
     fun getCurrentPrice(): Int {
-        
         return discountTiers
             .filter { currentCount >= it.requiredCount }
             .maxByOrNull { it.requiredCount }
